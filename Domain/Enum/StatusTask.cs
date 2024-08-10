@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SGT.Domain.Entities
+namespace SGT.Domain.Enum
 {
-    internal class Tarefa
+    public enum StatusTask
     {
+        Pending,
+        In_Progress,
+        Completed
     }
 }
