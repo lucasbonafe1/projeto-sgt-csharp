@@ -7,11 +7,14 @@ namespace SGT.Domain.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("userId")]
+        [Column("user_id")]
         public int Id { get; set; }
 
         [Column("name")]
         public string Name { get; set; }
+
+        [Column("phone_number")]
+        public string PhoneNumber { get; set; }
 
         [Column("email")]
         public string Email { get; set; }
@@ -19,18 +22,23 @@ namespace SGT.Domain.Entities
         [Column("password")]
         public string Password { get; set; }
 
+        [Column("account_creation_date")]
+        public DateTime AccountCreationDate { get; set; }
+
         [Column("tasks")]
-        public ICollection<TaskEntity> Tasks{ get; set; }
+        public ICollection<TaskEntity> Tasks { get; set; } = new List<TaskEntity>();
 
         public UserEntity() { }
 
-        public UserEntity(int id, string name, string email, string password, ICollection<TaskEntity> tasks)
+        public UserEntity(int id, string name, string phoneNumber, string email, string password, DateTime accountCreationDate, ICollection<TaskEntity> tasks)
         {
             Id = id;
             Name = name;
+            PhoneNumber = phoneNumber;
             Email = email;
             Password = password;
-            Tasks = tasks;
+            AccountCreationDate = accountCreationDate;
+            Tasks = tasks ?? new List<TaskEntity>(); // inicializado para que não haja erro se o param for null
         }
     }
 }

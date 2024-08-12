@@ -1,6 +1,6 @@
 ﻿using SGT.Domain.Entities;
 
-namespace SGT.Domain.Interfaces
+namespace SGT.Domain.Repositories
 {
     public interface ITaskRepository : IRepository<TaskEntity, int>
     {

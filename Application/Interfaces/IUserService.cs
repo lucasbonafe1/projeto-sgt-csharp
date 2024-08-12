@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SGT.Application.Services
+namespace SGT.Application.Interfaces
 {
-    internal class TarefaService
+    public interface IUserService
     {
     }
 }

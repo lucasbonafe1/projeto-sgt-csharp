@@ -8,14 +8,14 @@ namespace SGT.Domain.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("taskId")]
+        [Column("task_id")]
         public int Id { get; set; }
 
         [Column("title")]
         public string Title { get; set; }
 
         [Column("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Column("duration_in_days")]
         public int DurationInDays { get; set; }

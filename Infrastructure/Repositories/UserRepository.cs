@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using SGT.Domain.Interfaces;
+using SGT.Domain.Repositories;
 using SGT.Infrastructure.Data;
 using SGT.Domain.Entities;
-using Microsoft.Data.SqlClient;
 using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Npgsql;
 
 namespace SGT.Infrastructure.Repositories
 {
@@ -19,14 +18,14 @@ namespace SGT.Infrastructure.Repositories
 
         private IDbConnection CreateConnection()
         {
-            return new SqlConnection(_connectionString);
+            return new NpgsqlConnection(_connectionString);
         }
 
         public async Task<UserEntity> Add(UserEntity entity)
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"INSERT INTO users (name, email, password) VALUES (@name, @email, @password);";
+                var sql = @"INSERT INTO users (name, email, password) VALUES (@name, @email, @password) RETURNING userId;";
                 var id = await connection.QuerySingleAsync<int>(sql, entity);
                 entity.Id = id;
 
@@ -77,7 +76,12 @@ namespace SGT.Infrastructure.Repositories
 
             using (var connection = CreateConnection())
             {
-                var sql = @"UPDATE users SET name = @name, email = @email, password = @password WHERE userId = @Id";
+                var sql = @"
+                            UPDATE users
+                            SET name = @name,
+                                email = @email,
+                                password = @password
+                            WHERE userId = @Id";
 
                 entity.Id = id;
 

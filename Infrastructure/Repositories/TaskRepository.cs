@@ -1,11 +1,11 @@
 ﻿using Dapper;
-using SGT.Domain.Interfaces;
+using SGT.Domain.Repositories;
 using SGT.Domain.Entities;
 using SGT.Infrastructure.Data;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System.Data;
 
-namespace SGT.Domain.Repositories
+namespace SGT.Infrastructure.Repositories
 {
     public class TaskRepository : ITaskRepository
     {
@@ -18,7 +18,7 @@ namespace SGT.Domain.Repositories
 
         private IDbConnection CreateConnection()
         {
-            return new SqlConnection(_connectionString);
+            return new NpgsqlConnection(_connectionString);
         }
 
         public async Task<TaskEntity> Add(TaskEntity entity)
@@ -26,9 +26,10 @@ namespace SGT.Domain.Repositories
             using (var connection = CreateConnection())
             {
                 var sql = @"INSERT INTO tasks 
-                                (title, description, duration_in_days, criation_date, end_date, status) 
+                                (title, description, duration_in_days, creation_date, end_date, status) 
                             VALUES 
-                                (@title, @description, @duration_in_days, @criation_date, @end_date, @status);";
+                                (@title, @description, @duration_in_days, @creation_date, @end_date, @status)
+                            RETURNING taskId;";
 
                 var id = await connection.QuerySingleAsync<int>(sql, entity);
                 entity.Id = id;
@@ -59,10 +60,9 @@ namespace SGT.Domain.Repositories
 
         public async Task<TaskEntity?> Update(TaskEntity entity, int id)
         {
-            // TODO: ADD TRY E CATCH DEPOIS
-            var existingUser = await GetById(id);
+            var existingTask = await GetById(id);
 
-            if (existingUser == null)
+            if (existingTask == null)
             {
                 return null;
             }
@@ -74,7 +74,7 @@ namespace SGT.Domain.Repositories
                             SET title = @title, 
                                 description = @description, 
                                 duration_in_days = @duration_in_days, 
-                                criation_date = @criacao_date, 
+                                creation_date = @creation_date, 
                                 end_date = @end_date, 
                                 status = @status  
                             WHERE taskId = @Id";
@@ -86,7 +86,7 @@ namespace SGT.Domain.Repositories
                     title = entity.Title,
                     description = entity.Description,
                     duration_in_days = entity.DurationInDays,
-                    criacao_date = entity.CriationDate,
+                    creation_date = entity.CriationDate,
                     end_date = entity.EndDate,
                     status = entity.Status,
                     Id = id
@@ -101,7 +101,6 @@ namespace SGT.Domain.Repositories
             }
         }
 
-        //TODO: Delete Lógico
         public async Task Delete(TaskEntity entity)
         {
             using (var connection = CreateConnection())
