@@ -1,9 +1,16 @@
-﻿namespace SGT.Domain.Enum
+﻿using System.ComponentModel;
+
+namespace SGT.Domain.Enum
 {
     public enum StatusTask
     {
-        Pending,
-        In_Progress,
-        Completed
+        [Description("Pending task")]
+        Pending = 1,
+
+        [Description("In progress")]
+        In_Progress = 2, 
+
+        [Description("Task completed successfully")]
+        Completed = 3
     }
 }
