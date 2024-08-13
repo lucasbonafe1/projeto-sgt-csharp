@@ -91,9 +91,24 @@ namespace SGT.Application.Services
             return tasksConverted;
         }
 
-        public Task UpdateTaskAsync(TaskRequestDTO task)
+        public async Task UpdateTaskAsync(TaskRequestDTO taskDTO)
         {
-            throw new NotImplementedException();
+            var existingTask = await _taskRepository.GetById(taskDTO.Id);
+
+            if (existingTask == null)
+            {
+                throw new ApplicationException("User não encontrado.");
+            }
+
+            // atualiza os campos somente se forem passados no DTO
+            existingTask.Title = !string.IsNullOrWhiteSpace(taskDTO.Title) ? taskDTO.Title : existingTask.Title;
+            existingTask.Description = !string.IsNullOrWhiteSpace(taskDTO.Description) ? taskDTO.Description : existingTask.Description;
+            existingTask.DurationInDays = taskDTO.DurationInDays != default ? taskDTO.DurationInDays : existingTask.DurationInDays;
+            existingTask.StartDate = taskDTO.StartDate != default ? taskDTO.StartDate : existingTask.StartDate;
+            existingTask.EndDate = taskDTO.EndDate != default ? taskDTO.EndDate : existingTask.EndDate;
+            existingTask.Status = taskDTO.Status != default ? taskDTO.Status : existingTask.Status;
+
+            await _taskRepository.Update(existingTask, taskDTO.Id);
         }
 
         public Task DeleteTaskAsync(int id)

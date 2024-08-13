@@ -112,9 +112,9 @@ namespace SGT.Infrastructure.Repositories
                 {
                     title = entity.Title,
                     description = entity.Description,
-                    duration_in_days = entity.DurationInDays,
-                    creation_date = entity.StartDate,
-                    end_date = entity.EndDate,
+                    durationInDays = entity.DurationInDays,
+                    startDate = entity.StartDate,
+                    endDate = entity.EndDate,
                     status = entity.Status,
                     Id = id
                 });

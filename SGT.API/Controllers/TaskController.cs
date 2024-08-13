@@ -48,7 +48,7 @@ namespace SGT.API.Controllers
 
             if (task == null)
             {
-                return NotFound($"Nenhuma tarefa encontrada com o id {id}");
+                return NotFound($"Nenhuma tarefa encontrada com id {id}");
             }
 
             return Ok(task);
@@ -65,6 +65,33 @@ namespace SGT.API.Controllers
             }
 
             return Ok(tasks);
+        }
+
+        [HttpPut("update-task{id}")]
+        public async Task<ActionResult> Put([FromBody] TaskRequestDTO taskRequestDTO, int id)
+        {
+            TaskResponseDTO existingTask = await _taskService.GetTaskByIdAsync(id);
+
+            if(existingTask == null)
+            {
+                return NotFound("Tarefa inexistente."); 
+            }
+
+            var updatedTask = new TaskRequestDTO
+            {
+                Id = existingTask.Id,
+                Title = !string.IsNullOrWhiteSpace(taskRequestDTO.Title) ? taskRequestDTO.Title : existingTask.Title,
+                Description = !string.IsNullOrWhiteSpace(taskRequestDTO.Description) ? taskRequestDTO.Description : existingTask.Description,
+                DurationInDays = taskRequestDTO.DurationInDays != default ? taskRequestDTO.DurationInDays : existingTask.DurationInDays,
+                StartDate = taskRequestDTO.StartDate != default ? taskRequestDTO.StartDate : existingTask.StartDate,
+                EndDate = taskRequestDTO.EndDate != default ? taskRequestDTO.EndDate : existingTask.EndDate,
+                Status = taskRequestDTO.Status != default ? taskRequestDTO.Status : existingTask.Status
+            };
+
+            await _taskService.UpdateTaskAsync(updatedTask);
+
+            return NoContent();
+
         }
     }
 }

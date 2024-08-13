@@ -69,7 +69,6 @@ namespace SGT.Application.Services
 
         public async Task UpdateUserAsync(UserRequestDTO userDTO)
         {
-            // SE O USUARIO NÂO SETAR MANTER O ANTIGO
             var existingUser = await _userRepository.GetById(userDTO.Id);
 
             if (existingUser == null)
