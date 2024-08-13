@@ -23,22 +23,18 @@ namespace SGT.Domain.Entities
         public string Password { get; set; }
 
         [Column("account_creation_date")]
-        public DateTime AccountCreationDate { get; set; }
+        public DateTime AccountCreationDate { get; set; } = DateTime.UtcNow;
 
-        [Column("tasks")]
         public ICollection<TaskEntity> Tasks { get; set; } = new List<TaskEntity>();
 
         public UserEntity() { }
 
-        public UserEntity(int id, string name, string phoneNumber, string email, string password, DateTime accountCreationDate, ICollection<TaskEntity> tasks)
+        public UserEntity(string name, string phoneNumber, string email, string password)
         {
-            Id = id;
-            Name = name;
-            PhoneNumber = phoneNumber;
-            Email = email;
-            Password = password;
-            AccountCreationDate = accountCreationDate;
-            Tasks = tasks ?? new List<TaskEntity>(); // inicializado para que não haja erro se o param for null
+            this.Name = name;
+            this.PhoneNumber = phoneNumber;
+            this.Email = email;
+            this.Password = password;
         }
     }
 }

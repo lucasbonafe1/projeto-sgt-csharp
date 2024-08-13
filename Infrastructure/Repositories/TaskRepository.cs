@@ -26,10 +26,10 @@ namespace SGT.Infrastructure.Repositories
             using (var connection = CreateConnection())
             {
                 var sql = @"INSERT INTO tasks 
-                                (title, description, duration_in_days, creation_date, end_date, status) 
+                                (title, description, duration_in_days, start_date, end_date, status) 
                             VALUES 
-                                (@title, @description, @duration_in_days, @creation_date, @end_date, @status)
-                            RETURNING taskId;";
+                                (@Title, @Description, @DurationInDays, @StartDate, @EndDate, @Status)
+                            RETURNING task_id;";
 
                 var id = await connection.QuerySingleAsync<int>(sql, entity);
                 entity.Id = id;
@@ -52,7 +52,7 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"SELECT * FROM tasks WHERE taskId = @Id";
+                var sql = @"SELECT * FROM tasks WHERE task_id = @Id";
 
                 return await connection.QueryFirstOrDefaultAsync<TaskEntity>(sql, new { Id = id });
             }
@@ -71,13 +71,13 @@ namespace SGT.Infrastructure.Repositories
             {
                 var sql = @"
                             UPDATE tasks 
-                            SET title = @title, 
-                                description = @description, 
-                                duration_in_days = @duration_in_days, 
-                                creation_date = @creation_date, 
-                                end_date = @end_date, 
-                                status = @status  
-                            WHERE taskId = @Id";
+                            SET title = @Title, 
+                                description = @Description, 
+                                duration_in_days = @DurationInDays, 
+                                start_date = @StartDate, 
+                                end_date = @EndDate, 
+                                status = @Status  
+                            WHERE task_id = @Id";
 
                 entity.Id = id;
 
@@ -86,7 +86,7 @@ namespace SGT.Infrastructure.Repositories
                     title = entity.Title,
                     description = entity.Description,
                     duration_in_days = entity.DurationInDays,
-                    creation_date = entity.CriationDate,
+                    creation_date = entity.StartDate,
                     end_date = entity.EndDate,
                     status = entity.Status,
                     Id = id
@@ -105,7 +105,7 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"DELETE FROM tasks WHERE taskId = @Id";
+                var sql = @"DELETE FROM tasks WHERE task_id = @Id";
                 await connection.ExecuteAsync(sql, new { Id = entity.Id });
             }
         }

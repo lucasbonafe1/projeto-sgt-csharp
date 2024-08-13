@@ -37,5 +37,24 @@ namespace SGT.Application.DTOs
             AccountCreationDate = accountCreationDate;
             Tasks = tasks ?? new List<TaskEntity>();
         }
+
+        public UserResponseDTO(string name, string phoneNumber, string email, string password)
+        {
+            Name = name;
+            PhoneNumber = phoneNumber;
+            Email = email;
+            Password = password;
+        }
+
+        public UserResponseDTO(UserEntity userEntity)
+        {
+            this.Id = userEntity.Id;
+            this.Name = userEntity.Name;
+            this.PhoneNumber = userEntity.PhoneNumber;
+            this.Email = userEntity.Email;
+            this.Password = userEntity.Password;
+            this.AccountCreationDate = userEntity.AccountCreationDate;
+            this.Tasks = userEntity.Tasks;
+        }
     }
 }

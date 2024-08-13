@@ -25,7 +25,7 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"INSERT INTO users (name, email, password) VALUES (@name, @email, @password) RETURNING userId;";
+                var sql = @"INSERT INTO users (name, phone_number, email, password, account_creation_date) VALUES (@Name, @PhoneNumber, @Email, @Password, @AccountCreationDate) RETURNING user_id;";
                 var id = await connection.QuerySingleAsync<int>(sql, entity);
                 entity.Id = id;
 
@@ -47,7 +47,7 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"SELECT * FROM users WHERE userId = @Id";
+                var sql = @"SELECT user_id as Id, name, phone_number as PhoneNumber, email, password, account_creation_date as AccountCreationDate FROM users WHERE user_id = @Id";
 
                 return await connection.QueryFirstOrDefaultAsync<UserEntity>(sql, new { Id = id });
             }
@@ -58,7 +58,7 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             { 
-                var sql = @"SELECT * FROM Tasks WHERE userId = @Id";
+                var sql = @"SELECT * FROM tasks WHERE user_id = @Id";
 
                 return await connection.QueryAsync<TaskEntity>(sql, new { Id = id });
             }
@@ -78,10 +78,11 @@ namespace SGT.Infrastructure.Repositories
             {
                 var sql = @"
                             UPDATE users
-                            SET name = @name,
-                                email = @email,
-                                password = @password
-                            WHERE userId = @Id";
+                            SET name = @Name,
+                                phone_number = @PhoneNumber
+                                email = @Email,
+                                password = @Password
+                            WHERE user_id = @Id";
 
                 entity.Id = id;
 
@@ -107,7 +108,7 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"DELETE FROM users WHERE userId = @Id";
+                var sql = @"DELETE FROM users WHERE user_id = @Id";
                 await connection.ExecuteAsync(sql, new { Id = entity.Id });
             }
         }

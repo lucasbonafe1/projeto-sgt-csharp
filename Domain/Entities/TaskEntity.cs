@@ -20,8 +20,8 @@ namespace SGT.Domain.Entities
         [Column("duration_in_days")]
         public int DurationInDays { get; set; }
 
-        [Column("criation_date")]
-        public DateTime CriationDate { get; set; }
+        [Column("start_date")]
+        public DateTime StartDate { get; set; }
 
         [Column("end_date")]
         public DateTime EndDate { get; set; }
@@ -30,7 +30,7 @@ namespace SGT.Domain.Entities
         public StatusTask Status { get; set; }
 
         [Column("user")]
-        public UserEntity User { get; set; }
+        public UserEntity? User { get; set; }
 
 
         public TaskEntity() { }
@@ -41,7 +41,29 @@ namespace SGT.Domain.Entities
             Title = title;
             Description = description;
             DurationInDays = durationInDays;
-            CriationDate = criationDate;
+            StartDate = criationDate;
+            EndDate = endDate;
+            Status = status;
+            User = user;
+        }
+
+        public TaskEntity(int id, string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            DurationInDays = durationInDays;
+            StartDate = criationDate;
+            EndDate = endDate;
+            Status = status;
+        }
+
+        public TaskEntity( string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status, UserEntity user)
+        {
+            Title = title;
+            Description = description;
+            DurationInDays = durationInDays;
+            StartDate = criationDate;
             EndDate = endDate;
             Status = status;
             User = user;
