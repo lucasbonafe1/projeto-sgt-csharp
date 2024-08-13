@@ -14,21 +14,21 @@ namespace SGT.Application.Services
             _taskRepository = taskrepository;
         }
 
-        public async Task<TaskResponseDTO> AddTaskAsync(TaskResponseDTO taskResponseDTO)
+        public async Task<TaskRequestDTO> AddTaskAsync(TaskRequestDTO taskRequestDTO)
         {
             // add validação para se caso alguma informação for null
 
-            TaskEntity task = new TaskEntity(taskResponseDTO.Title,
-                                 taskResponseDTO.Description,
-                                 taskResponseDTO.DurationInDays,
-                                 taskResponseDTO.StartDate, // fazer com que busque a data atual
-                                 taskResponseDTO.EndDate,
-                                 taskResponseDTO.Status,
-                                 new UserEntity { Id = taskResponseDTO.UserId });
+            TaskEntity task = new TaskEntity(taskRequestDTO.Title,
+                                 taskRequestDTO.Description,
+                                 taskRequestDTO.DurationInDays,
+                                 taskRequestDTO.StartDate, // fazer com que busque a data atual
+                                 taskRequestDTO.EndDate,
+                                 taskRequestDTO.Status,
+                                 taskRequestDTO.UserId);
 
             var taskCreated = await _taskRepository.Add(task);
 
-            TaskResponseDTO taskConverted = new TaskResponseDTO(taskCreated);
+            TaskRequestDTO taskConverted = new TaskRequestDTO(taskCreated);
 
             return taskConverted;
 
@@ -52,7 +52,8 @@ namespace SGT.Application.Services
                 DurationInDays = task.DurationInDays,
                 StartDate = task.StartDate,
                 EndDate = task.EndDate,
-                Status = task.Status
+                Status = task.Status,
+                UserId = task.UserId
             });
 
             return tasksConverted;
@@ -72,7 +73,7 @@ namespace SGT.Application.Services
             return taskConverted;
         }
 
-        public Task UpdateTaskAsync(TaskResponseDTO task)
+        public Task UpdateTaskAsync(TaskRequestDTO task)
         {
             throw new NotImplementedException();
         }

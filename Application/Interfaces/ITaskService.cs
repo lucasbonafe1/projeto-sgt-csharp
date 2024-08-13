@@ -11,8 +11,8 @@ namespace SGT.Application.Interfaces
     {
         Task<TaskResponseDTO> GetTaskByIdAsync(int id);
         Task<IEnumerable<TaskResponseDTO>> GetAllTasksAsync();
-        Task<TaskResponseDTO> AddTaskAsync(TaskResponseDTO task);
-        Task UpdateTaskAsync(TaskResponseDTO task);
+        Task<TaskRequestDTO> AddTaskAsync(TaskRequestDTO task);
+        Task UpdateTaskAsync(TaskRequestDTO task);
         Task DeleteTaskAsync(int id);
     }
 }

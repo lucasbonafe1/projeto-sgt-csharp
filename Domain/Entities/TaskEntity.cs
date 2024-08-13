@@ -29,13 +29,13 @@ namespace SGT.Domain.Entities
         [Column("status")]
         public StatusTask Status { get; set; }
 
-        [Column("user")]
-        public UserEntity? User { get; set; }
+        [Column("user_id")]
+        public int UserId { get; set; }
 
 
         public TaskEntity() { }
 
-        public TaskEntity(int id, string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status, UserEntity user)
+        public TaskEntity(int id, string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status, int userId)
         {
             Id = id;
             Title = title;
@@ -44,7 +44,7 @@ namespace SGT.Domain.Entities
             StartDate = criationDate;
             EndDate = endDate;
             Status = status;
-            User = user;
+            UserId = userId;
         }
 
         public TaskEntity(int id, string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status)
@@ -58,7 +58,7 @@ namespace SGT.Domain.Entities
             Status = status;
         }
 
-        public TaskEntity( string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status, UserEntity user)
+        public TaskEntity( string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status, int userId)
         {
             Title = title;
             Description = description;
@@ -66,7 +66,7 @@ namespace SGT.Domain.Entities
             StartDate = criationDate;
             EndDate = endDate;
             Status = status;
-            User = user;
+            UserId = userId;
         }
     }
 }

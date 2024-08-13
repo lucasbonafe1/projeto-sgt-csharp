@@ -31,10 +31,10 @@ namespace SGT.Domain.Entities
 
         public UserEntity(string name, string phoneNumber, string email, string password)
         {
-            this.Name = name;
-            this.PhoneNumber = phoneNumber;
-            this.Email = email;
-            this.Password = password;
+            Name = name;
+            PhoneNumber = phoneNumber;
+            Email = email;
+            Password = password;
         }
     }
 }

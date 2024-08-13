@@ -37,7 +37,7 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"SELECT * FROM users";
+                var sql = @"SELECT user_id AS Id, name, phone_number as PhoneNumber, email, password, account_creation_date as AccountCreationDate FROM users";
 
                 return await connection.QueryAsync<UserEntity>(sql);
             }

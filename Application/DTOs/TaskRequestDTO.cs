@@ -3,32 +3,20 @@ using SGT.Domain.Enum;
 
 namespace SGT.Application.DTOs
 {
-    public class TaskResponseDTO
-    {        
+    public class TaskRequestDTO
+    {
         public int Id { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
         public int DurationInDays { get; set; }
-        public DateTime StartDate { get; set; } 
+        public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public StatusTask Status { get; set; }
         public int UserId { get; set; }
 
-        public TaskResponseDTO() { }
+        public TaskRequestDTO() { }
 
-        public TaskResponseDTO(int id, string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status, int userId)
-        {
-            Id = id;
-            Title = title;
-            Description = description;
-            DurationInDays = durationInDays;
-            StartDate = criationDate;
-            EndDate = endDate;
-            Status = status;
-            UserId = userId;
-        }
-
-        public TaskResponseDTO(TaskEntity userEntity)
+        public TaskRequestDTO(TaskEntity userEntity)
         {
             Id = userEntity.Id;
             Title = userEntity.Title;

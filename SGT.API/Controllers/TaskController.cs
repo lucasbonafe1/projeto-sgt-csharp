@@ -18,7 +18,7 @@ namespace SGT.API.Controllers
         }
 
         [HttpPost("create-task")]
-        public async Task<IActionResult> Post([FromBody] TaskResponseDTO task)
+        public async Task<IActionResult> Post([FromBody] TaskRequestDTO task)
         { 
             //TODO: adicionar validação para se Task for null
 

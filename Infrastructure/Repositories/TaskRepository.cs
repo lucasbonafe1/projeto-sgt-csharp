@@ -26,15 +26,26 @@ namespace SGT.Infrastructure.Repositories
             using (var connection = CreateConnection())
             {
                 var sql = @"INSERT INTO tasks 
-                                (title, description, duration_in_days, start_date, end_date, status) 
+                                (title, description, duration_in_days, start_date, end_date, status, user_id) 
                             VALUES 
-                                (@Title, @Description, @DurationInDays, @StartDate, @EndDate, @Status)
+                                (@Title, @Description, @DurationInDays, @StartDate, @EndDate, @Status, @UserId)
                             RETURNING task_id;";
 
                 var id = await connection.QuerySingleAsync<int>(sql, entity);
-                entity.Id = id;
 
-                return entity;
+                var taskCriated = new TaskEntity
+                {
+                    Id = id,
+                    Title = entity.Title,
+                    Description = entity.Description,
+                    DurationInDays = entity.DurationInDays,
+                    StartDate = entity.StartDate,
+                    EndDate = entity.EndDate,
+                    Status = entity.Status,
+                    UserId = entity.UserId
+                };
+
+                return taskCriated;
             }
         }
 
@@ -42,7 +53,9 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"SELECT * FROM tasks";
+                var sql = @"SELECT task_id AS Id, title, description, duration_in_days AS DurationInDays,
+                           start_date AS StartDate, end_date AS EndDate, status, user_id AS UserId
+                    FROM tasks";
 
                 return await connection.QueryAsync<TaskEntity>(sql);
             }
@@ -52,7 +65,9 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"SELECT * FROM tasks WHERE task_id = @Id";
+                var sql = @"SELECT task_id AS Id, title, description, duration_in_days AS DurationInDays,
+                           start_date AS StartDate, end_date AS EndDate, status, user_id AS UserId
+                    FROM tasks WHERE task_id = @Id";
 
                 return await connection.QueryFirstOrDefaultAsync<TaskEntity>(sql, new { Id = id });
             }
