@@ -67,15 +67,27 @@ namespace SGT.Application.Services
             return userConverted;
         }
 
-        public Task UpdateUserAsync(UserRequestDTO userDTO)
+        public async Task UpdateUserAsync(UserRequestDTO userDTO)
         {
             // SE O USUARIO NÂO SETAR MANTER O ANTIGO
-            throw new NotImplementedException();
+            var existingUser = await _userRepository.GetById(userDTO.Id);
+
+            if (existingUser == null)
+            {
+                throw new ApplicationException("User não encontrado.");
+            }
+
+            // atualiza os campos somente se forem passados no DTO
+            existingUser.Name = !string.IsNullOrWhiteSpace(userDTO.Name) ? userDTO.Name : existingUser.Name;
+            existingUser.PhoneNumber = !string.IsNullOrWhiteSpace(userDTO.PhoneNumber) ? userDTO.PhoneNumber : existingUser.PhoneNumber;
+            existingUser.Email = !string.IsNullOrWhiteSpace(userDTO.Email) ? userDTO.Email : existingUser.Email;
+
+            await _userRepository.Update(existingUser, userDTO.Id);
         }
 
         public Task DeleteUserAsync(int id)
         {
-            throw new NotImplementedException();
+           throw new NotImplementedException();
         }
     }
 }

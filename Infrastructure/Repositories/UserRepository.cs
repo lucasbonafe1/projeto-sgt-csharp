@@ -105,9 +105,8 @@ namespace SGT.Infrastructure.Repositories
                 var sql = @"
                             UPDATE users
                             SET name = @Name,
-                                phone_number = @PhoneNumber
-                                email = @Email,
-                                password = @Password
+                                phone_number = @PhoneNumber,
+                                email = @Email
                             WHERE user_id = @Id";
 
                 entity.Id = id;
@@ -115,8 +114,8 @@ namespace SGT.Infrastructure.Repositories
                 var affectedRows = await connection.ExecuteAsync(sql, new
                 {
                     name = entity.Name,
+                    phoneNumber = entity.PhoneNumber,
                     email = entity.Email,
-                    password = entity.Password,
                     Id = id
                 });
 

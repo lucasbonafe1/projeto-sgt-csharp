@@ -56,5 +56,12 @@ namespace SGT.Application.DTOs
             AccountCreationDate = userEntity.AccountCreationDate;
             Tasks = userEntity.Tasks;
         }
+
+        public UserResponseDTO(UserRequestDTO userRequestDTO)
+        {
+            Name = userRequestDTO.Name;
+            PhoneNumber = userRequestDTO.PhoneNumber;
+            Email = userRequestDTO.Email;
+        }
     }
 }
