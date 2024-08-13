@@ -25,7 +25,7 @@ namespace SGT.Application.Services
 
             var userCreated = await _userRepository.Add(user);
 
-            UserRequestDTO userConverted = new UserRequestDTO(userCreated.Name, userCreated.PhoneNumber, userCreated.Email, userCreated.Password);
+            UserRequestDTO userConverted = new UserRequestDTO(userCreated);
 
             return userConverted;
         }
@@ -55,7 +55,6 @@ namespace SGT.Application.Services
 
         public async Task<UserResponseDTO> GetUserByIdAsync(int id)
         {
-            // PEGAR O USER COM AS TASKS
             UserEntity? user = await _userRepository.GetById(id);
 
             if (user == null)

@@ -48,13 +48,13 @@ namespace SGT.Application.DTOs
 
         public UserResponseDTO(UserEntity userEntity)
         {
-            this.Id = userEntity.Id;
-            this.Name = userEntity.Name;
-            this.PhoneNumber = userEntity.PhoneNumber;
-            this.Email = userEntity.Email;
-            this.Password = userEntity.Password;
-            this.AccountCreationDate = userEntity.AccountCreationDate;
-            this.Tasks = userEntity.Tasks;
+            Id = userEntity.Id;
+            Name = userEntity.Name;
+            PhoneNumber = userEntity.PhoneNumber;
+            Email = userEntity.Email;
+            Password = userEntity.Password;
+            AccountCreationDate = userEntity.AccountCreationDate;
+            Tasks = userEntity.Tasks;
         }
     }
 }

@@ -73,6 +73,18 @@ namespace SGT.Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<TaskEntity?>> GetTasksByUserId(int id)
+        {
+            using (var connection = CreateConnection())
+            {
+                var sql = @"SELECT task_id AS Id, title, description, duration_in_days AS DurationInDays,
+                           start_date AS StartDate, end_date AS EndDate, status, user_id AS UserId
+                    FROM tasks WHERE user_id = @Id";
+
+                return await connection.QueryAsync<TaskEntity>(sql, new { Id = id });
+            }
+        }
+
         public async Task<TaskEntity?> Update(TaskEntity entity, int id)
         {
             var existingTask = await GetById(id);

@@ -1,6 +1,6 @@
 ﻿namespace SGT.API.Models
 {
-    public class TarefaResponseModel
+    public class TaskResponseModel
     {
     }
 }

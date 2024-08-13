@@ -1,9 +1,4 @@
 ﻿using SGT.Application.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SGT.Application.Interfaces
 {
@@ -11,6 +6,7 @@ namespace SGT.Application.Interfaces
     {
         Task<TaskResponseDTO> GetTaskByIdAsync(int id);
         Task<IEnumerable<TaskResponseDTO>> GetAllTasksAsync();
+        Task<IEnumerable<TaskResponseDTO>> GetTasksByUserIdAsync(int id);
         Task<TaskRequestDTO> AddTaskAsync(TaskRequestDTO task);
         Task UpdateTaskAsync(TaskRequestDTO task);
         Task DeleteTaskAsync(int id);

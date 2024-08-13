@@ -47,20 +47,46 @@ namespace SGT.Infrastructure.Repositories
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"SELECT user_id as Id, name, phone_number as PhoneNumber, email, password, account_creation_date as AccountCreationDate FROM users WHERE user_id = @Id";
+                var sql = @"
+                            SELECT u.user_id as Id, u.name, u.phone_number as PhoneNumber, u.email, u.account_creation_date as AccountCreationDate,
+                                   t.task_id as Id, t.title, t.description, t.start_date as StartDate, t.end_date as EndDate, t.status, t.user_id as UserId
+                            FROM users u
+                            LEFT JOIN tasks t ON u.user_id = t.user_id
+                            WHERE u.user_id = @Id";
 
-                return await connection.QueryFirstOrDefaultAsync<UserEntity>(sql, new { Id = id });
-            }
-        }
+                // cria um dicionário que vai armazenar o usuário e suas tarefas.
+                var userDictionary = new Dictionary<int, UserEntity>();
 
-        //FIXME: REVER LÓGICA
-        public async Task<IEnumerable<TaskEntity?>> GetTasksByUserId(int id)
-        {
-            using (var connection = CreateConnection())
-            { 
-                var sql = @"SELECT * FROM tasks WHERE user_id = @Id";
 
-                return await connection.QueryAsync<TaskEntity>(sql, new { Id = id });
+                // executa a consulta async e mapeia os resultados para as entidades UserEntity e TaskEntity.
+                var result = await connection.QueryAsync<UserEntity, TaskEntity, UserEntity>(
+                    sql,
+                    (user, task) => //map
+                    {
+
+                        // verifica presença do user no dicionário.
+                        if (!userDictionary.TryGetValue(user.Id, out var userEntity))
+                        {
+
+                            // Se não estiver, cria uma nova entrada no dicionário.
+                            userEntity = user;
+                            userEntity.Tasks = new List<TaskEntity>();
+                            // adiciona o usuário com a lista de tasks ao dicionário.
+                            userDictionary.Add(user.Id, userEntity);
+                        }
+
+                        if (task != null)
+                        {
+                            userEntity.Tasks.Add(task);
+                        }
+
+                        return userEntity;
+                    },
+                    splitOn: "Id", // define onde ocorre a divisão entre User e Task
+                    param: new { Id = id }
+                );
+
+                return userDictionary.Values.FirstOrDefault(); 
             }
         }
 

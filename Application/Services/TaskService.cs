@@ -34,7 +34,6 @@ namespace SGT.Application.Services
 
         }
 
-
         public async Task<IEnumerable<TaskResponseDTO>> GetAllTasksAsync()
         {
             IEnumerable<TaskEntity?> tasks = await _taskRepository.GetAll();
@@ -71,6 +70,25 @@ namespace SGT.Application.Services
             TaskResponseDTO taskConverted = new TaskResponseDTO(task);
 
             return taskConverted;
+        }
+
+        public async Task<IEnumerable<TaskResponseDTO>> GetTasksByUserIdAsync(int id)
+        {
+            IEnumerable<TaskEntity?> tasks = await _taskRepository.GetTasksByUserId(id);
+
+            var tasksConverted = tasks.Select(task => new TaskResponseDTO
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                DurationInDays = task.DurationInDays,
+                StartDate = task.StartDate,
+                EndDate = task.EndDate,
+                Status = task.Status,
+                UserId = task.UserId
+            });
+
+            return tasksConverted;
         }
 
         public Task UpdateTaskAsync(TaskRequestDTO task)

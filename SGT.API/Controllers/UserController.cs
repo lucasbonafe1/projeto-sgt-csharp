@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SGT.Application.DTOs;
 using SGT.Application.Interfaces;
-using SGT.Application.Services;
 
 namespace SGT.API.Controllers
 {
@@ -23,6 +22,11 @@ namespace SGT.API.Controllers
 
             var userCreated = await _userService.AddUserAsync(user);
 
+            if (user == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro na criação de conta.");
+            }
+
             return Ok(userCreated);
         }
 
@@ -31,6 +35,12 @@ namespace SGT.API.Controllers
         {
             IEnumerable<UserResponseDTO> users = await _userService.GetAllUsersAsync();
 
+            if (users == null || !users.Any())
+            {
+                return NotFound("Nenhum user encontrado com o id");
+            }
+
+
             return Ok(users);
         }
 
@@ -38,6 +48,11 @@ namespace SGT.API.Controllers
         public async Task<IActionResult> FindById(int id)
         {
             UserResponseDTO user = await _userService.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound($"Nenhum user encontrado com o id {id}");
+            }
 
             return Ok(user);
         }

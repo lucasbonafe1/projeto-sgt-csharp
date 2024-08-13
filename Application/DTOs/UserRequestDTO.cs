@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SGT.Domain.Entities;
 
 namespace SGT.Application.DTOs
 {
@@ -19,12 +15,13 @@ namespace SGT.Application.DTOs
 
         public UserRequestDTO() { }
 
-        public UserRequestDTO(string name, string phoneNumber, string email, string password)
+        public UserRequestDTO(UserEntity userEntity)
         {
-            Name = name;
-            PhoneNumber = phoneNumber;
-            Email = email;
-            Password = password;
+            Id = userEntity.Id;
+            Name = userEntity.Name;
+            PhoneNumber = userEntity.PhoneNumber;
+            Email = userEntity.Email;
+            Password = userEntity.Password;
         }
     }
 }
