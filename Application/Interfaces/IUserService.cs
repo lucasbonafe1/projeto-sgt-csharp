@@ -6,8 +6,8 @@ namespace SGT.Application.Interfaces
     {
         Task<UserResponseDTO> GetUserByIdAsync(int id);
         Task<IEnumerable<UserResponseDTO>> GetAllUsersAsync();
-        Task<UserRequestDTO> AddUserAsync(UserRequestDTO user);
-        Task UpdateUserAsync(UserRequestDTO user);
-        Task DeleteUserAsync(int id);
+        Task<UserResponseDTO> AddUserAsync(UserRequestDTO user);
+        Task UpdateUserAsync(UserUpdateDTO user, int id);
+        Task<bool> DeleteUserAsync(int id);
     }
 }

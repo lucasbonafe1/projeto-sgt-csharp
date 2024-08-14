@@ -128,15 +128,23 @@ namespace SGT.Infrastructure.Repositories
             }
         }
 
-        // TODO: Implementar Delete Lógico
-        public async Task Delete(UserEntity entity)
+        public async Task<bool> Delete(int id)
         {
-            using (var connection = CreateConnection())
+            try
             {
-                var sql = @"DELETE FROM users WHERE user_id = @Id";
-                await connection.ExecuteAsync(sql, new { Id = entity.Id });
+                string sqlQuery = @"UPDATE users 
+                                SET deleted_at = NOW() 
+                                WHERE user_id = @Id";
+
+                using (var connection = new NpgsqlConnection(_connectionString))
+                {
+                    return await connection.ExecuteAsync(sqlQuery, new { Id = id }) > 0;
+                }
+            }
+            catch (PostgresException error)
+            {
+                throw new ApplicationException("Erro ao efetuar a query sql " + error);
             }
         }
-
     }
 }

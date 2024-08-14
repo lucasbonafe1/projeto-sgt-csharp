@@ -3,6 +3,7 @@ using SGT.Application.Interfaces;
 using SGT.Domain.Entities;
 using SGT.Domain.Repositories;
 
+
 namespace SGT.Application.Services
 {
     public class TaskService : ITaskService
@@ -14,9 +15,12 @@ namespace SGT.Application.Services
             _taskRepository = taskrepository;
         }
 
-        public async Task<TaskRequestDTO> AddTaskAsync(TaskRequestDTO taskRequestDTO)
+        public async Task<TaskResponseDTO> AddTaskAsync(TaskRequestDTO taskRequestDTO)
         {
-            // add validação para se caso alguma informação for null
+            if(taskRequestDTO == null)
+            {
+                throw new ArgumentNullException("Task não pode ser nula.");
+            }
 
             TaskEntity task = new TaskEntity(taskRequestDTO.Title,
                                  taskRequestDTO.Description,
@@ -28,7 +32,7 @@ namespace SGT.Application.Services
 
             var taskCreated = await _taskRepository.Add(task);
 
-            TaskRequestDTO taskConverted = new TaskRequestDTO(taskCreated);
+            TaskResponseDTO taskConverted = new TaskResponseDTO(taskCreated);
 
             return taskConverted;
 
@@ -91,29 +95,37 @@ namespace SGT.Application.Services
             return tasksConverted;
         }
 
-        public async Task UpdateTaskAsync(TaskRequestDTO taskDTO)
-        {
-            var existingTask = await _taskRepository.GetById(taskDTO.Id);
+        public async Task UpdateTaskAsync(TaskUpdateDTO taskDTO, int id)
+        { 
+            var existingTask = await _taskRepository.GetById(id);
 
             if (existingTask == null)
             {
-                throw new ApplicationException("User não encontrado.");
+                throw new ApplicationException("Task não encontrado.");
             }
 
-            // atualiza os campos somente se forem passados no DTO
-            existingTask.Title = !string.IsNullOrWhiteSpace(taskDTO.Title) ? taskDTO.Title : existingTask.Title;
-            existingTask.Description = !string.IsNullOrWhiteSpace(taskDTO.Description) ? taskDTO.Description : existingTask.Description;
-            existingTask.DurationInDays = taskDTO.DurationInDays != default ? taskDTO.DurationInDays : existingTask.DurationInDays;
-            existingTask.StartDate = taskDTO.StartDate != default ? taskDTO.StartDate : existingTask.StartDate;
-            existingTask.EndDate = taskDTO.EndDate != default ? taskDTO.EndDate : existingTask.EndDate;
-            existingTask.Status = taskDTO.Status != default ? taskDTO.Status : existingTask.Status;
+            var taskProperties = typeof(TaskEntity).GetProperties();
+            var dtoProperties = typeof(TaskUpdateDTO).GetProperties();
 
-            await _taskRepository.Update(existingTask, taskDTO.Id);
+            foreach (var dtoProperty in dtoProperties)
+            {
+                var taskProperty = taskProperties.FirstOrDefault(p => p.Name == dtoProperty.Name && p.PropertyType == dtoProperty.PropertyType);
+                if (taskProperty != null && taskProperty.CanWrite)
+                {
+                    var value = dtoProperty.GetValue(taskDTO);
+                    if (value != null)
+                    {
+                        taskProperty.SetValue(existingTask, value);
+                    }
+                }
+            }
+
+            await _taskRepository.Update(existingTask, id);
         }
 
-        public Task DeleteTaskAsync(int id)
+        public async Task<bool> DeleteTaskAsync(int id)
         {
-            throw new NotImplementedException();
+            return (id <= 0) ? throw new ApplicationException("Id inexistente.") : await _taskRepository.Delete(id);
         }
     }
 }

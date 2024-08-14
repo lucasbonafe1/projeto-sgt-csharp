@@ -20,25 +20,6 @@ namespace SGT.Application.DTOs
 
         public UserResponseDTO() { }
 
-        public UserResponseDTO(int id, string name, string phoneNumber, string email, string password, DateTime accountCreationDate, ICollection<TaskEntity> tasks)
-        {
-            Id = id;
-            Name = name;
-            PhoneNumber = phoneNumber;
-            Email = email;
-            Password = password;
-            AccountCreationDate = accountCreationDate;
-            Tasks = tasks ?? new List<TaskEntity>();
-        }
-
-        public UserResponseDTO(string name, string phoneNumber, string email, string password)
-        {
-            Name = name;
-            PhoneNumber = phoneNumber;
-            Email = email;
-            Password = password;
-        }
-
         public UserResponseDTO(UserEntity userEntity)
         {
             Id = userEntity.Id;
@@ -48,13 +29,6 @@ namespace SGT.Application.DTOs
             Password = userEntity.Password;
             AccountCreationDate = userEntity.AccountCreationDate;
             Tasks = userEntity.Tasks;
-        }
-
-        public UserResponseDTO(UserRequestDTO userRequestDTO)
-        {
-            Name = userRequestDTO.Name;
-            PhoneNumber = userRequestDTO.PhoneNumber;
-            Email = userRequestDTO.Email;
         }
     }
 }

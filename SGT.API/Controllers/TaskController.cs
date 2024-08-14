@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SGT.Application.DTOs;
 using SGT.Application.Interfaces;
+using SGT.Application.Services;
 
 namespace SGT.API.Controllers
 {
@@ -68,30 +69,19 @@ namespace SGT.API.Controllers
         }
 
         [HttpPut("update-task{id}")]
-        public async Task<ActionResult> Put([FromBody] TaskRequestDTO taskRequestDTO, int id)
+        public async Task<ActionResult> Put([FromBody] TaskUpdateDTO taskUpdateDTO, int id)
         {
-            TaskResponseDTO existingTask = await _taskService.GetTaskByIdAsync(id);
 
-            if(existingTask == null)
-            {
-                return NotFound("Tarefa inexistente."); 
-            }
-
-            var updatedTask = new TaskRequestDTO
-            {
-                Id = existingTask.Id,
-                Title = !string.IsNullOrWhiteSpace(taskRequestDTO.Title) ? taskRequestDTO.Title : existingTask.Title,
-                Description = !string.IsNullOrWhiteSpace(taskRequestDTO.Description) ? taskRequestDTO.Description : existingTask.Description,
-                DurationInDays = taskRequestDTO.DurationInDays != default ? taskRequestDTO.DurationInDays : existingTask.DurationInDays,
-                StartDate = taskRequestDTO.StartDate != default ? taskRequestDTO.StartDate : existingTask.StartDate,
-                EndDate = taskRequestDTO.EndDate != default ? taskRequestDTO.EndDate : existingTask.EndDate,
-                Status = taskRequestDTO.Status != default ? taskRequestDTO.Status : existingTask.Status
-            };
-
-            await _taskService.UpdateTaskAsync(updatedTask);
+            await _taskService.UpdateTaskAsync(taskUpdateDTO, id);
 
             return NoContent();
 
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        { 
+            return Ok(await _taskService.DeleteTaskAsync(id));
         }
     }
 }

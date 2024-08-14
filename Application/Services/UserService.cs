@@ -14,9 +14,12 @@ namespace SGT.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<UserRequestDTO> AddUserAsync(UserRequestDTO userDTO)
+        public async Task<UserResponseDTO> AddUserAsync(UserRequestDTO userDTO)
         {
-            // add validação para se caso alguma informação for null
+            if(userDTO == null)
+            { 
+                throw new ArgumentNullException("User não pode ser nulo.");
+            }
 
             UserEntity user = new UserEntity(userDTO.Name,
                                  userDTO.PhoneNumber,
@@ -25,7 +28,7 @@ namespace SGT.Application.Services
 
             var userCreated = await _userRepository.Add(user);
 
-            UserRequestDTO userConverted = new UserRequestDTO(userCreated);
+            UserResponseDTO userConverted = new UserResponseDTO(userCreated);
 
             return userConverted;
         }
@@ -37,7 +40,7 @@ namespace SGT.Application.Services
 
             if (users == null)
             {
-                throw new ApplicationException("Nenhuma tarefa encontrada.");
+                throw new ApplicationException("Nenhum user encontrado.");
             }
 
             var usersConverted = users.Select(user => new UserResponseDTO
@@ -67,26 +70,37 @@ namespace SGT.Application.Services
             return userConverted;
         }
 
-        public async Task UpdateUserAsync(UserRequestDTO userDTO)
+        public async Task UpdateUserAsync(UserUpdateDTO userDTO, int id)
         {
-            var existingUser = await _userRepository.GetById(userDTO.Id);
+            var existingUser = await _userRepository.GetById(id);
 
             if (existingUser == null)
             {
                 throw new ApplicationException("User não encontrado.");
             }
 
-            // atualiza os campos somente se forem passados no DTO
-            existingUser.Name = !string.IsNullOrWhiteSpace(userDTO.Name) ? userDTO.Name : existingUser.Name;
-            existingUser.PhoneNumber = !string.IsNullOrWhiteSpace(userDTO.PhoneNumber) ? userDTO.PhoneNumber : existingUser.PhoneNumber;
-            existingUser.Email = !string.IsNullOrWhiteSpace(userDTO.Email) ? userDTO.Email : existingUser.Email;
+            var taskProperties = typeof(UserEntity).GetProperties();
+            var dtoProperties = typeof(UserUpdateDTO).GetProperties();
 
-            await _userRepository.Update(existingUser, userDTO.Id);
+            foreach (var dtoProperty in dtoProperties)
+            {
+                var taskProperty = taskProperties.FirstOrDefault(p => p.Name == dtoProperty.Name && p.PropertyType == dtoProperty.PropertyType);
+                if (taskProperty != null && taskProperty.CanWrite)
+                {
+                    var value = dtoProperty.GetValue(userDTO);
+                    if (value != null)
+                    {
+                        taskProperty.SetValue(existingUser, value);
+                    }
+                }
+            }
+
+            await _userRepository.Update(existingUser, id);
         }
 
-        public Task DeleteUserAsync(int id)
+        public async Task<bool> DeleteUserAsync(int id)
         {
-           throw new NotImplementedException();
+            return (id <= 0) ? throw new ApplicationException("Id inexistente.") : await _userRepository.Delete(id);
         }
     }
 }
