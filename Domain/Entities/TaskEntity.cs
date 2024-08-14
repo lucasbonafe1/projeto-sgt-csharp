@@ -35,29 +35,6 @@ namespace SGT.Domain.Entities
 
         public TaskEntity() { }
 
-        public TaskEntity(int id, string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status, int userId)
-        {
-            Id = id;
-            Title = title;
-            Description = description;
-            DurationInDays = durationInDays;
-            StartDate = criationDate;
-            EndDate = endDate;
-            Status = status;
-            UserId = userId;
-        }
-
-        public TaskEntity(int id, string title, string description, int durationInDays, DateTime criationDate, DateTime endDate, StatusTask status)
-        {
-            Id = id;
-            Title = title;
-            Description = description;
-            DurationInDays = durationInDays;
-            StartDate = criationDate;
-            EndDate = endDate;
-            Status = status;
-        }
-
         public TaskEntity( string title, string description, int durationInDays, DateTime? criationDate, DateTime endDate, StatusTask? status, int userId)
         {
             Title = title;

@@ -55,7 +55,8 @@ namespace SGT.Infrastructure.Repositories
             {
                 var sql = @"SELECT task_id AS Id, title, description, duration_in_days AS DurationInDays,
                            start_date AS StartDate, end_date AS EndDate, status, user_id AS UserId
-                    FROM tasks";
+                    FROM tasks 
+                    WHERE deleted_at IS null";
 
                 return await connection.QueryAsync<TaskEntity>(sql);
             }
@@ -67,7 +68,7 @@ namespace SGT.Infrastructure.Repositories
             {
                 var sql = @"SELECT task_id AS Id, title, description, duration_in_days AS DurationInDays,
                            start_date AS StartDate, end_date AS EndDate, status, user_id AS UserId
-                    FROM tasks WHERE task_id = @Id";
+                    FROM tasks WHERE task_id = @Id AND deleted_at IS null";
 
                 return await connection.QueryFirstOrDefaultAsync<TaskEntity>(sql, new { Id = id });
             }
@@ -79,7 +80,7 @@ namespace SGT.Infrastructure.Repositories
             {
                 var sql = @"SELECT task_id AS Id, title, description, duration_in_days AS DurationInDays,
                            start_date AS StartDate, end_date AS EndDate, status, user_id AS UserId
-                    FROM tasks WHERE user_id = @Id";
+                    FROM tasks WHERE user_id = @Id AND deleted_at IS null";
 
                 return await connection.QueryAsync<TaskEntity>(sql, new { Id = id });
             }
