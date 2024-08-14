@@ -27,6 +27,8 @@ namespace SGT.Domain.Entities
 
         public ICollection<TaskEntity> Tasks { get; set; } = new List<TaskEntity>();
 
+        public UserEntity() { } 
+
         public UserEntity(string name, string phoneNumber, string email, string password)
         {
             Name = name;
