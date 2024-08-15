@@ -22,6 +22,11 @@ namespace SGT.Application.Services
                 throw new ArgumentNullException("Task não pode ser nula.");
             }
 
+            if (taskRequestDTO.EndDate <= taskRequestDTO.StartDate)
+            {
+                throw new ApplicationException("A data de término deve ser posterior à data de início.");
+            }
+
             TaskEntity task = new TaskEntity(taskRequestDTO.Title,
                                  taskRequestDTO.Description,
                                  taskRequestDTO.StartDate,
