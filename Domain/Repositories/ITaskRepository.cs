@@ -4,6 +4,6 @@ namespace SGT.Domain.Repositories
 {
     public interface ITaskRepository : IRepository<TaskEntity, int>
     {
-        Task<IEnumerable<TaskEntity?>> GetTasksByUserId(int id);
+        Task<IEnumerable<TaskEntity>> GetTasksByUserId(int id);
     }
 }

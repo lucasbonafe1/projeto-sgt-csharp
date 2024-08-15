@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGT.Application.DTOs;
+using SGT.Application.DTOs.Users;
 using SGT.Application.Interfaces;
-using SGT.Application.Services;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace SGT.API.Controllers
 {
@@ -17,10 +17,9 @@ namespace SGT.API.Controllers
         }
 
         [HttpPost("create-account")]
+        [SwaggerOperation(Summary = "Cria uma nova conta", Description = "Este endpoint cria uma nova conta e retorna o usuário criado.")]
         public async Task<IActionResult> Post([FromBody] UserRequestDTO user)
         {
-            //TODO: adicionar validação para se User for null
-
             var userCreated = await _userService.AddUserAsync(user);
 
             if (user == null)
@@ -32,20 +31,21 @@ namespace SGT.API.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Busca todos os usuários registrados no sistema", Description = "Este endpoint busca todos os usuários salvos no sistema, com um DTO seguro.")]
         public async Task<IActionResult> FindAll()
         {
-            IEnumerable<UserResponseDTO> users = await _userService.GetAllUsersAsync();
+            IEnumerable<UserGetAllDTO> users = await _userService.GetAllUsersAsync();
 
             if (users == null || !users.Any())
             {
-                return NotFound("Nenhum user encontrado com o id");
+                return NotFound("Nenhum user encontrado.");
             }
-
 
             return Ok(users);
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Busca cada usuário específico por id", Description = "Este endpoint busca cada usuário específico pelo id.")]
         public async Task<IActionResult> FindById(int id)
         {
             UserResponseDTO user = await _userService.GetUserByIdAsync(id);
@@ -59,6 +59,7 @@ namespace SGT.API.Controllers
         }
 
         [HttpPut("update-account-data/{id}")]
+        [SwaggerOperation(Summary = "Atualiza cada usuário específico pelo id", Description = "Este endpoint atualiza cada usuário pelo id.")]
         public async Task<IActionResult> Put([FromBody] UserUpdateDTO userDTO, int id)
         {
            
@@ -68,6 +69,7 @@ namespace SGT.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Deleta um usuário específico pelo id", Description = "Este endpoint deleta cada usuário pelo id (Delete lógico).")]
         public async Task<ActionResult> Delete(int id)
         {
             return Ok(await _userService.DeleteUserAsync(id));

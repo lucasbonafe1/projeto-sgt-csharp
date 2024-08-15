@@ -1,4 +1,4 @@
-﻿using SGT.Application.DTOs;
+﻿using SGT.Application.DTOs.Users;
 using SGT.Application.Interfaces;
 using SGT.Domain.Entities;
 using SGT.Domain.Repositories;
@@ -21,10 +21,14 @@ namespace SGT.Application.Services
                 throw new ArgumentNullException("User não pode ser nulo.");
             }
 
+            // criptografa a senha para ser armazenada no bd
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
+
             UserEntity user = new UserEntity(userDTO.Name,
-                                 userDTO.PhoneNumber,
-                                 userDTO.Email,
-                                 userDTO.Password);
+                                             userDTO.PhoneNumber,
+                                             userDTO.Email,
+                                             hashedPassword);
+
 
             var userCreated = await _userRepository.Add(user);
 
@@ -33,7 +37,7 @@ namespace SGT.Application.Services
             return userConverted;
         }
 
-        public async Task<IEnumerable<UserResponseDTO>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserGetAllDTO>> GetAllUsersAsync()
         {
 
             IEnumerable<UserEntity?> users = await _userRepository.GetAll();
@@ -43,13 +47,12 @@ namespace SGT.Application.Services
                 throw new ApplicationException("Nenhum user encontrado.");
             }
 
-            var usersConverted = users.Select(user => new UserResponseDTO
+            var usersConverted = users.Select(user => new UserGetAllDTO
             {
                 Id = user.Id,
                 Name = user.Name,
                 PhoneNumber = user.PhoneNumber,
                 Email = user.Email,
-                Password = user.Password,
                 AccountCreationDate = user.AccountCreationDate
             });
 
@@ -94,6 +97,8 @@ namespace SGT.Application.Services
                     }
                 }
             }
+
+            existingUser.Password = BCrypt.Net.BCrypt.HashPassword(existingUser.Password);
 
             await _userRepository.Update(existingUser, id);
         }

@@ -1,9 +1,9 @@
 ﻿using SGT.Domain.Entities;
 
-namespace SGT.Application.DTOs
+namespace SGT.Application.DTOs.Users
 {
-    public class UserResponseDTO
-    { 
+    public class UserGetAllDTO
+    {
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -12,23 +12,17 @@ namespace SGT.Application.DTOs
 
         public string Email { get; set; }
 
-        public string Password { get; set; }
-
         public DateTime AccountCreationDate { get; set; }
 
-        public ICollection<TaskEntity> Tasks { get; set; } = new List<TaskEntity>();
+        public UserGetAllDTO() { }
 
-        public UserResponseDTO() { }
-
-        public UserResponseDTO(UserEntity userEntity)
+        public UserGetAllDTO(UserEntity userEntity)
         {
             Id = userEntity.Id;
             Name = userEntity.Name;
             PhoneNumber = userEntity.PhoneNumber;
             Email = userEntity.Email;
-            Password = userEntity.Password;
             AccountCreationDate = userEntity.AccountCreationDate;
-            Tasks = userEntity.Tasks;
         }
     }
 }

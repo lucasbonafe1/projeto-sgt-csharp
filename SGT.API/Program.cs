@@ -1,7 +1,10 @@
+using Microsoft.OpenApi.Models;
 using SGT.Application.Interfaces;
 using SGT.Application.Services;
 using SGT.Domain.Repositories;
 using SGT.Infrastructure.Data;
+using SGT.Infrastructure.Messaging.ConfigMQ;
+using SGT.Infrastructure.Messaging.Producers;
 using SGT.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,10 +25,16 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SGT.API", Version = "v1" });
+    c.EnableAnnotations();
+});
+
+builder.Services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQSettings"));
+builder.Services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {

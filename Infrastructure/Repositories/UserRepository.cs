@@ -33,11 +33,11 @@ namespace SGT.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<UserEntity?>> GetAll()
+        public async Task<IEnumerable<UserEntity>> GetAll()
         {
             using (var connection = CreateConnection())
             {
-                var sql = @"SELECT user_id AS Id, name, phone_number as PhoneNumber, email, password, account_creation_date as AccountCreationDate FROM users WHERE deleted_at IS null";
+                var sql = @"SELECT user_id AS Id, name, phone_number as PhoneNumber, email, account_creation_date as AccountCreationDate FROM users WHERE deleted_at IS null";
 
                 return await connection.QueryAsync<UserEntity>(sql);
             }
@@ -48,7 +48,7 @@ namespace SGT.Infrastructure.Repositories
             using (var connection = CreateConnection())
             {
                 var sql = @"
-                            SELECT u.user_id as Id, u.name, u.phone_number as PhoneNumber, u.email, u.account_creation_date as AccountCreationDate,
+                            SELECT u.user_id as Id, u.name, u.phone_number as PhoneNumber, u.email, u.password, u.account_creation_date as AccountCreationDate,
                                    t.task_id as Id, t.title, t.description, t.start_date as StartDate, t.end_date as EndDate, t.status, t.user_id as UserId
                             FROM users u
                             LEFT JOIN tasks t ON u.user_id = t.user_id AND t.deleted_at IS null
