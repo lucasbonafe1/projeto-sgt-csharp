@@ -17,6 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application\SGT.Application.csproj" />
+    <ProjectReference Include="..\Domain\SGT.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\SGT.Infrastructure.csproj" />
+    <ProjectReference Include="..\SGT.API\SGT.API.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

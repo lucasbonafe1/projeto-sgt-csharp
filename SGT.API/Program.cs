@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using SGT.Application.Interfaces;
 using SGT.Application.Services;
 using SGT.Domain.Repositories;
@@ -22,10 +23,13 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SGT.API", Version = "v1" });
+    c.EnableAnnotations();
+});
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
