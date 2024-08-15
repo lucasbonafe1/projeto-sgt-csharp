@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGT.Application.DTOs;
+using SGT.Application.DTOs.Users;
 using SGT.Application.Interfaces;
 using SGT.Application.Services;
 
@@ -34,11 +34,11 @@ namespace SGT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> FindAll()
         {
-            IEnumerable<UserResponseDTO> users = await _userService.GetAllUsersAsync();
+            IEnumerable<UserGetAllDTO> users = await _userService.GetAllUsersAsync();
 
             if (users == null || !users.Any())
             {
-                return NotFound("Nenhum user encontrado com o id");
+                return NotFound("Nenhum user encontrado.");
             }
 
 

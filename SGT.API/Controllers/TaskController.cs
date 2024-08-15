@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SGT.Application.DTOs;
+using SGT.Application.DTOs.Tasks;
 using SGT.Application.Interfaces;
 using SGT.Application.Services;
 

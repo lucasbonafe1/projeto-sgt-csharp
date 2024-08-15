@@ -1,4 +1,4 @@
-﻿using SGT.Application.DTOs;
+﻿using SGT.Application.DTOs.Tasks;
 using SGT.Application.Interfaces;
 using SGT.Domain.Entities;
 using SGT.Domain.Repositories;
@@ -24,8 +24,7 @@ namespace SGT.Application.Services
 
             TaskEntity task = new TaskEntity(taskRequestDTO.Title,
                                  taskRequestDTO.Description,
-                                 taskRequestDTO.DurationInDays,
-                                 taskRequestDTO.StartDate, // fazer com que busque a data atual
+                                 taskRequestDTO.StartDate,
                                  taskRequestDTO.EndDate,
                                  taskRequestDTO.Status,
                                  taskRequestDTO.UserId);
@@ -40,7 +39,7 @@ namespace SGT.Application.Services
 
         public async Task<IEnumerable<TaskResponseDTO>> GetAllTasksAsync()
         {
-            IEnumerable<TaskEntity?> tasks = await _taskRepository.GetAll();
+            IEnumerable<TaskEntity> tasks = await _taskRepository.GetAll();
 
             if (tasks == null)
             {
@@ -52,7 +51,6 @@ namespace SGT.Application.Services
                 Id = task.Id,
                 Title = task.Title,
                 Description = task.Description,
-                DurationInDays = task.DurationInDays,
                 StartDate = task.StartDate,
                 EndDate = task.EndDate,
                 Status = task.Status,
@@ -78,14 +76,14 @@ namespace SGT.Application.Services
 
         public async Task<IEnumerable<TaskResponseDTO>> GetTasksByUserIdAsync(int id)
         {
-            IEnumerable<TaskEntity?> tasks = await _taskRepository.GetTasksByUserId(id);
+            IEnumerable<TaskEntity> tasks = await _taskRepository.GetTasksByUserId(id);
+
 
             var tasksConverted = tasks.Select(task => new TaskResponseDTO
             {
                 Id = task.Id,
                 Title = task.Title,
                 Description = task.Description,
-                DurationInDays = task.DurationInDays,
                 StartDate = task.StartDate,
                 EndDate = task.EndDate,
                 Status = task.Status,
@@ -109,12 +107,16 @@ namespace SGT.Application.Services
 
             foreach (var dtoProperty in dtoProperties)
             {
-                var taskProperty = taskProperties.FirstOrDefault(p => p.Name == dtoProperty.Name && p.PropertyType == dtoProperty.PropertyType);
+                var taskProperty = taskProperties.FirstOrDefault(p => p.Name == dtoProperty.Name && (p.PropertyType == dtoProperty.PropertyType ||( p.PropertyType == typeof(DateTime) && dtoProperty.PropertyType == typeof(DateTime?))));
                 if (taskProperty != null && taskProperty.CanWrite)
                 {
                     var value = dtoProperty.GetValue(taskDTO);
                     if (value != null)
                     {
+                        if (taskProperty.PropertyType == typeof(DateTime) && value is DateTime?)
+                        {
+                            value = ((DateTime?)value).Value;
+                        }
                         taskProperty.SetValue(existingTask, value);
                     }
                 }

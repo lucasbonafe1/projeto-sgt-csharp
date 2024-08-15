@@ -12,16 +12,13 @@ namespace SGT.Domain.Entities
         public int Id { get; set; }
 
         [Column("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Column("description")]
         public string? Description { get; set; }
 
-        [Column("duration_in_days")]
-        public int DurationInDays { get; set; }
-
         [Column("start_date")]
-        public DateTime? StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         [Column("end_date")]
         public DateTime EndDate { get; set; }
@@ -35,12 +32,11 @@ namespace SGT.Domain.Entities
 
         public TaskEntity() { }
 
-        public TaskEntity( string title, string description, int durationInDays, DateTime? criationDate, DateTime endDate, StatusTask? status, int userId)
+        public TaskEntity(string title, string? description, DateTime startDate, DateTime endDate, StatusTask? status, int userId)
         {
             Title = title;
             Description = description;
-            DurationInDays = durationInDays;
-            StartDate = criationDate;
+            StartDate = startDate;
             EndDate = endDate;
             Status = status;
             UserId = userId;

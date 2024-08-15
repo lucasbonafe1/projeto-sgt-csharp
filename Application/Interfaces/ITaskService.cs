@@ -1,4 +1,4 @@
-﻿using SGT.Application.DTOs;
+﻿using SGT.Application.DTOs.Tasks;
 
 namespace SGT.Application.Interfaces
 {
