@@ -14,17 +14,17 @@ namespace SGT.Infrastructure.Messaging.Producers
             _settings = options.Value;
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(string message, string queueName)
         {
             var factory = new ConnectionFactory() { HostName = _settings.Host, UserName = _settings.UserName, Password = _settings.Password };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "demo-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+                channel.QueueDeclare(queue: queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
                 var body = Encoding.UTF8.GetBytes(message);
 
-                channel.BasicPublish(exchange: "", routingKey: "demo-queue", basicProperties: null, body: body);
+                channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
             }
         }
     }

@@ -5,6 +5,8 @@ using SGT.Domain.Repositories;
 using SGT.Infrastructure.Data;
 using SGT.Infrastructure.Messaging.ConfigMQ;
 using SGT.Infrastructure.Messaging.Producers;
+using SGT.Infrastructure.Messaging.Producers.Task;
+using SGT.Infrastructure.Messaging.Producers.User;
 using SGT.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,13 +16,15 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnCh
 
 DbConfig.Initialize(configuration);
 
-//presentation
+//injeção de dependencias
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<ITaskProducer, TaskProducer>();
+builder.Services.AddScoped<IUserProducer, UserProducer>();
 
 
 builder.Services.AddControllers();

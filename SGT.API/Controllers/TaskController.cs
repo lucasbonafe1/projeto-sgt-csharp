@@ -2,6 +2,7 @@
 using SGT.Application.DTOs.Tasks;
 using SGT.Application.Interfaces;
 using SGT.Infrastructure.Messaging.Producers;
+using SGT.Infrastructure.Messaging.Producers.Task;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SGT.API.Controllers
@@ -11,12 +12,13 @@ namespace SGT.API.Controllers
     public class TaskController : Controller
     {
         private readonly ITaskService _taskService;
-        private readonly IRabbitMQProducer _rabbitMQProducer;
+        private readonly ITaskProducer _taskProducer;
 
-        public TaskController(ITaskService taskService, IRabbitMQProducer rabbitMQProducer)
+
+        public TaskController(ITaskService taskService, ITaskProducer taskProducer)
         {
             _taskService = taskService;
-            _rabbitMQProducer = rabbitMQProducer;
+            _taskProducer = taskProducer;
         }
 
         [HttpPost("create-task")]
@@ -30,9 +32,8 @@ namespace SGT.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro na criação de tarefa.");
             }
 
-            var message = $"TAREFA: {taskCreated.Title} \n {taskCreated.StartDate} à {taskCreated.EndDate}";
-            _rabbitMQProducer.SendMessage(message);
-
+            _taskProducer.SendTaskMessage(taskCreated);
+            
             return Ok(taskCreated);
         }
 
@@ -81,9 +82,10 @@ namespace SGT.API.Controllers
         [HttpPut("update-task{id}")]
         [SwaggerOperation(Summary = "Atualiza cada tarefa específica pelo id", Description = "Este endpoint atualiza cada tarefa pelo id.")]
         public async Task<ActionResult> Put([FromBody] TaskUpdateDTO taskUpdateDTO, int id)
-        {
-
+        { 
             await _taskService.UpdateTaskAsync(taskUpdateDTO, id);
+
+            _taskProducer.UpdatedTaskMessage(taskUpdateDTO);
 
             return NoContent();
 

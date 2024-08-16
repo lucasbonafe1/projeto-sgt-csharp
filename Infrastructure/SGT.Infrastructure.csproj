@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application\SGT.Application.csproj" />
     <ProjectReference Include="..\Domain\SGT.Domain.csproj" />
   </ItemGroup>
 
