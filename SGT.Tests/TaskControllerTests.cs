@@ -1,21 +1,30 @@
-﻿using SGT.API.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
+using SGT.API.Controllers;
 using SGT.Application.DTOs.Tasks;
 using SGT.Application.Interfaces;
 using SGT.Domain.Enum;
-using Microsoft.AspNetCore.Mvc;
-using Moq;
+using SGT.Infrastructure.Messaging.Producers.Task;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace SGT.Tests
 {
     public class TaskControllerTest
     {
         private readonly Mock<ITaskService> _taskServiceMock;
+        private readonly Mock<ITaskProducer> _taskProducerMock;
         private readonly TaskController _controller;
 
         public TaskControllerTest()
         {
             _taskServiceMock = new Mock<ITaskService>();
-            _controller = new TaskController(_taskServiceMock.Object);
+            _taskProducerMock = new Mock<ITaskProducer>();
+            _controller = new TaskController(_taskServiceMock.Object, _taskProducerMock.Object);
         }
 
         [Fact]
@@ -53,12 +62,13 @@ namespace SGT.Tests
             Assert.Equal(taskResponseDTO.EndDate, returnedTask.EndDate);
             Assert.Equal(taskResponseDTO.Status, returnedTask.Status);
             Assert.Equal(taskResponseDTO.UserId, returnedTask.UserId);
+
+            _taskProducerMock.Verify(p => p.SendTaskMessage(taskResponseDTO), Times.Once);
         }
 
         [Fact]
         public async Task FindAll_RetornaOkEArrayDeTasks_QuandoExisteAlgumaTask()
         {
-
             var tasks = new List<TaskResponseDTO>
             {
                 new TaskResponseDTO
@@ -95,7 +105,6 @@ namespace SGT.Tests
         [Fact]
         public async Task FindById_RetornaOkETask_QuandoATaskExiste()
         {
-
             int taskId = 1;
             var task = new TaskResponseDTO
             {
@@ -174,6 +183,8 @@ namespace SGT.Tests
             var result = await _controller.Put(taskUpdateDTO, taskId);
 
             Assert.IsType<NoContentResult>(result);
+
+            _taskProducerMock.Verify(p => p.UpdatedTaskMessage(taskUpdateDTO), Times.Once);
         }
 
         [Fact]
@@ -185,7 +196,8 @@ namespace SGT.Tests
 
             var result = await _controller.Delete(taskId);
 
-            Assert.IsType<OkObjectResult>(result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.True((bool)okResult.Value);
         }
     }
 }

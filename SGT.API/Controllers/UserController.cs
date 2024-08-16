@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SGT.Application.DTOs.Users;
 using SGT.Application.Interfaces;
+using SGT.Infrastructure.Messaging.Producers.User;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SGT.API.Controllers
@@ -10,10 +11,13 @@ namespace SGT.API.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IUserProducer _userProducer;
+      
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IUserProducer userProducer)
         {
             _userService = userService;
+            _userProducer = userProducer;   
         }
 
         [HttpPost("create-account")]
@@ -26,6 +30,8 @@ namespace SGT.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro na criação de conta.");
             }
+
+            _userProducer.CreateAccountMessage(userCreated);
 
             return Ok(userCreated);
         }
@@ -55,6 +61,8 @@ namespace SGT.API.Controllers
                 return NotFound($"Nenhum user encontrado com o id {id}");
             }
 
+            _userProducer.GetTimeTask(user);
+
             return Ok(user);
         }
 
@@ -62,8 +70,9 @@ namespace SGT.API.Controllers
         [SwaggerOperation(Summary = "Atualiza cada usuário específico pelo id", Description = "Este endpoint atualiza cada usuário pelo id.")]
         public async Task<IActionResult> Put([FromBody] UserUpdateDTO userDTO, int id)
         {
-           
             await _userService.UpdateUserAsync(userDTO, id);
+
+            _userProducer.UpdatedAccountMessage(userDTO);
 
             return NoContent();
         }

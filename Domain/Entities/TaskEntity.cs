@@ -24,15 +24,14 @@ namespace SGT.Domain.Entities
         public DateTime EndDate { get; set; }
 
         [Column("status")]
-        public StatusTask? Status { get; set; }
+        public StatusTask Status { get; set; }
 
         [Column("user_id")]
         public int UserId { get; set; }
 
-
         public TaskEntity() { }
 
-        public TaskEntity(string title, string? description, DateTime startDate, DateTime endDate, StatusTask? status, int userId)
+        public TaskEntity(string title, string? description, DateTime startDate, DateTime endDate, StatusTask status, int userId)
         {
             Title = title;
             Description = description;

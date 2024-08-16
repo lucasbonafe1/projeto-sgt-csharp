@@ -33,7 +33,7 @@ namespace SGT.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<UserEntity?>> GetAll()
+        public async Task<IEnumerable<UserEntity>> GetAll()
         {
             using (var connection = CreateConnection())
             {

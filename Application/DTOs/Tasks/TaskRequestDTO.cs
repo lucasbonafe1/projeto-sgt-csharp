@@ -19,7 +19,7 @@ namespace SGT.Application.DTOs.Tasks
         [Required(ErrorMessage = "A data de término é obrigatória.")]
         public DateTime EndDate { get; set; }
 
-        public StatusTask? Status { get; set; }
+        public StatusTask Status { get; set; }
 
         [Required(ErrorMessage = "O id do usuário é obrigatório.")]
         public int UserId { get; set; }
