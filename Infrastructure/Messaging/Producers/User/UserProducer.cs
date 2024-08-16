@@ -26,15 +26,24 @@ namespace SGT.Infrastructure.Messaging.Producers.User
         }
 
         public void GetTimeTask(UserResponseDTO user)
-        { 
-            String message = $"Tarefas pendentes: \n{user.Tasks}";
+        {
+            string message;
 
-            if (user.Tasks == null)
+            if (user.Tasks == null || user.Tasks.Count == 0)
             {
-                message = $"Olá {user.Name}, Você ainda não tem tarefas alistadas. ";
+                message = $"Olá {user.Name}, Você ainda não tem tarefas alistadas.";
+            }
+            else
+            {
+                var taskDetails = user.Tasks
+                    .Select(task => $"Título: {task.Title}, Data de Início: {task.StartDate}, Data de Término: {task.EndDate}")
+                    .Aggregate((current, next) => current + "\n" + next);
+
+                message = $"Tarefas pendentes: \n{taskDetails}";
             }
 
             _rabbitMqProducer.SendMessage(message, "user-queue");
         }
+
     }
 }

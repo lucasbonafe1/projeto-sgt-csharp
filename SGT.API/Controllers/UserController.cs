@@ -59,7 +59,9 @@ namespace SGT.API.Controllers
             if (user == null)
             {
                 return NotFound($"Nenhum user encontrado com o id {id}");
-            }       
+            }
+
+            _userProducer.GetTimeTask(user);
 
             return Ok(user);
         }
