@@ -11,8 +11,7 @@ namespace SGT.API.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-        private readonly IUserProducer _userProducer;
-      
+        private readonly IUserProducer _userProducer;  
 
         public UserController(IUserService userService, IUserProducer userProducer)
         {
@@ -44,7 +43,7 @@ namespace SGT.API.Controllers
 
             if (users == null || !users.Any())
             {
-                return NotFound("Nenhum user encontrado.");
+                return NotFound("Nenhum usuário encontrado.");
             }
 
             return Ok(users);
@@ -58,7 +57,7 @@ namespace SGT.API.Controllers
 
             if (user == null)
             {
-                return NotFound($"Nenhum user encontrado com o id {id}");
+                return NotFound($"Nenhum usuário encontrado com o id {id}");
             }
 
             _userProducer.GetTimeTask(user);

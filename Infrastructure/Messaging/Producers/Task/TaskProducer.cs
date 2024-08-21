@@ -1,7 +1,4 @@
 ﻿using SGT.Application.DTOs.Tasks;
-using RabbitMQ.Client;
-using System;
-using System.Text;
 
 namespace SGT.Infrastructure.Messaging.Producers.Task
 {

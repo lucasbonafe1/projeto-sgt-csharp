@@ -1,6 +1,4 @@
-﻿
-using SGT.Application.DTOs.Tasks;
-using SGT.Application.DTOs.Users;
+﻿using SGT.Application.DTOs.Users;
 
 namespace SGT.Infrastructure.Messaging.Producers.User
 {

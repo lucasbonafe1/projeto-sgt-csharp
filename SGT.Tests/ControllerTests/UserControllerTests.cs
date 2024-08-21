@@ -3,15 +3,9 @@ using Moq;
 using SGT.API.Controllers;
 using SGT.Application.DTOs.Users;
 using SGT.Application.Interfaces;
-using SGT.Domain.Enum;
 using SGT.Infrastructure.Messaging.Producers.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
-namespace SGT.Tests
+namespace SGT.Tests.ControllerTests
 {
     public class UserControllerTest
     {
@@ -33,7 +27,7 @@ namespace SGT.Tests
             {
                 Name = "Bonafe",
                 Email = "bonas@example.com",
-                Password = "Passw0rd!"
+                Password = "passwrd"
             };
             var userResponseDTO = new UserResponseDTO
             {
