@@ -36,24 +36,49 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "SGT.API", Description = "T2M - API de Gerenciamento de Tarefas", Version = "v1" });
     c.EnableAnnotations();
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+    {  
+      new OpenApiSecurityScheme
+      {
+      Reference = new OpenApiReference
+          {
+              Type = ReferenceType.SecurityScheme,
+              Id = "Bearer"
+          },
+          Scheme = "oauth2",
+          Name = "Bearer",
+          In = ParameterLocation.Header,
+      },
+      new List<string>()
+     }
+    
+    });
 });
 
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(x =>
 {
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
     x.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = configuration["JwtSettings:Issuer"],
-        ValidAudience = configuration["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey
-                (Encoding.UTF8.GetBytes(configuration["JwtSettings:SecretKey"]!)),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
+                (Encoding.UTF8.GetBytes(SGT.Infrastructure.Security.Key.Secret)),
+        ValidateIssuer = false,
+        ValidateAudience = false,
         ValidateIssuerSigningKey = true
     };
 });

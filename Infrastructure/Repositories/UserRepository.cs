@@ -33,6 +33,35 @@ namespace SGT.Infrastructure.Repositories
             }
         }
 
+        public async Task<bool> AuthLoginAsync(string Email, string Password)
+        {
+            using (var connection = CreateConnection())
+            {
+                try
+                {
+                    var sql = @"SELECT email, password FROM users WHERE email = @Email AND deleted_at IS null";
+                    var user = await connection.QueryFirstOrDefaultAsync<UserEntity>(sql, new { Email });
+
+
+                    // faz a verificação se a senha passada é referente a criptografada no BD
+                    if (BCrypt.Net.BCrypt.Verify(Password, user.Password))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        throw new ApplicationException("Login inválido");
+                    }
+                }
+                catch
+                {
+                    throw new ApplicationException("Erro ao tentar fazer login");
+                }
+            }
+ 
+        }
+
+
         public async Task<IEnumerable<UserEntity>> GetAll()
         {
             using (var connection = CreateConnection())
