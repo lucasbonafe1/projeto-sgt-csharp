@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SGT.Application.DTOs.Tasks;
 using SGT.Application.Interfaces;
-using SGT.Infrastructure.Messaging.Producers;
 using SGT.Infrastructure.Messaging.Producers.Task;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SGT.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("tasks")]
     public class TaskController : Controller

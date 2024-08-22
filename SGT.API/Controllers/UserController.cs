@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SGT.Application.DTOs.Users;
 using SGT.Application.Interfaces;
 using SGT.Infrastructure.Messaging.Producers.User;
@@ -11,8 +12,7 @@ namespace SGT.API.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-        private readonly IUserProducer _userProducer;
-      
+        private readonly IUserProducer _userProducer;  
 
         public UserController(IUserService userService, IUserProducer userProducer)
         {
@@ -36,6 +36,7 @@ namespace SGT.API.Controllers
             return Ok(userCreated);
         }
 
+        [Authorize]
         [HttpGet]
         [SwaggerOperation(Summary = "Busca todos os usuários registrados no sistema", Description = "Este endpoint busca todos os usuários salvos no sistema, com um DTO seguro.")]
         public async Task<IActionResult> FindAll()
@@ -44,12 +45,13 @@ namespace SGT.API.Controllers
 
             if (users == null || !users.Any())
             {
-                return NotFound("Nenhum user encontrado.");
+                return NotFound("Nenhum usuário encontrado.");
             }
 
             return Ok(users);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         [SwaggerOperation(Summary = "Busca cada usuário específico por id", Description = "Este endpoint busca cada usuário específico pelo id.")]
         public async Task<IActionResult> FindById(int id)
@@ -58,7 +60,7 @@ namespace SGT.API.Controllers
 
             if (user == null)
             {
-                return NotFound($"Nenhum user encontrado com o id {id}");
+                return NotFound($"Nenhum usuário encontrado com o id {id}");
             }
 
             _userProducer.GetTimeTask(user);
@@ -66,6 +68,7 @@ namespace SGT.API.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpPut("update-account-data/{id}")]
         [SwaggerOperation(Summary = "Atualiza cada usuário específico pelo id", Description = "Este endpoint atualiza cada usuário pelo id.")]
         public async Task<IActionResult> Put([FromBody] UserUpdateDTO userDTO, int id)
@@ -77,6 +80,7 @@ namespace SGT.API.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Deleta um usuário específico pelo id", Description = "Este endpoint deleta cada usuário pelo id (Delete lógico).")]
         public async Task<ActionResult> Delete(int id)

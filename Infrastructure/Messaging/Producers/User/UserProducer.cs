@@ -1,7 +1,4 @@
-﻿using RabbitMQ.Client;
-using SGT.Application.DTOs.Users;
-using System;
-using System.Text;
+﻿using SGT.Application.DTOs.Users;
 
 namespace SGT.Infrastructure.Messaging.Producers.User
 {

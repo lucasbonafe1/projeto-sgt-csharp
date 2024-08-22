@@ -107,21 +107,28 @@ namespace SGT.Application.Services
                 throw new ApplicationException("Task não encontrado.");
             }
 
+            // busca todas as propriedades das classes e armazena em um array
             var taskProperties = typeof(TaskEntity).GetProperties();
             var dtoProperties = typeof(TaskUpdateDTO).GetProperties();
 
             foreach (var dtoProperty in dtoProperties)
             {
-                var taskProperty = taskProperties.FirstOrDefault(p => p.Name == dtoProperty.Name && (p.PropertyType == dtoProperty.PropertyType ||( p.PropertyType == typeof(DateTime) && dtoProperty.PropertyType == typeof(DateTime?))));
-                if (taskProperty != null && taskProperty.CanWrite)
+                // iteração sobre cada propriedade e compara valores do DTO com a Entity
+                var taskProperty = taskProperties.FirstOrDefault(propInfo => propInfo.Name == dtoProperty.Name &&
+                (propInfo.PropertyType == dtoProperty.PropertyType || (propInfo.PropertyType == typeof(DateTime) && dtoProperty.PropertyType == typeof(DateTime?))));
+
+                if (taskProperty != null)
                 {
+                    // obtem o valor da propriedade no taskDTO que está sendo iterada naquele momento
                     var value = dtoProperty.GetValue(taskDTO);
                     if (value != null)
                     {
+                        // converte para DateTime
                         if (taskProperty.PropertyType == typeof(DateTime) && value is DateTime?)
                         {
                             value = ((DateTime?)value).Value;
                         }
+                        // atribui o DateTime convertido a task
                         taskProperty.SetValue(existingTask, value);
                     }
                 }
