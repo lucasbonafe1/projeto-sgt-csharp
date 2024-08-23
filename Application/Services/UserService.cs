@@ -1,4 +1,5 @@
-﻿using SGT.Application.DTOs.Users;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using SGT.Application.DTOs.Users;
 using SGT.Application.Interfaces;
 using SGT.Domain.Entities;
 using SGT.Domain.Repositories;
@@ -65,7 +66,7 @@ namespace SGT.Application.Services
 
             if (user == null)
             {
-                throw new ApplicationException($"Nenhum user encontrado com o id {id}");
+                throw new ApplicationException("Nenhum user encontrado.");
             }
 
             UserResponseDTO userConverted = new UserResponseDTO(user);

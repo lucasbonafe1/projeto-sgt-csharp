@@ -5,6 +5,7 @@ using SGT.Application.Interfaces;
 using SGT.Application.Services;
 using SGT.Domain.Repositories;
 using SGT.Infrastructure.Data;
+using SGT.Infrastructure.Exceptions;
 using SGT.Infrastructure.Messaging.ConfigMQ;
 using SGT.Infrastructure.Messaging.Producers;
 using SGT.Infrastructure.Messaging.Producers.Task;
@@ -65,6 +66,12 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// exception
+builder.Services
+    .AddExceptionHandler<GlobalExceptionHandler>()
+    .AddExceptionHandler<BadRequestExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -89,6 +96,9 @@ builder.Services.Configure<RabbitMQSettings>(configuration.GetSection("RabbitMQS
 builder.Services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
 
 var app = builder.Build();
+
+// exception
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
