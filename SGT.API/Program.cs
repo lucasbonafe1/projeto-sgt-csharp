@@ -5,7 +5,7 @@ using SGT.Application.Interfaces;
 using SGT.Application.Services;
 using SGT.Domain.Repositories;
 using SGT.Infrastructure.Data;
-using SGT.Infrastructure.Exceptions;
+using SGT.Infrastructure.Middlewares;
 using SGT.Infrastructure.Messaging.ConfigMQ;
 using SGT.Infrastructure.Messaging.Producers;
 using SGT.Infrastructure.Messaging.Producers.Task;
@@ -68,8 +68,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // exception
 builder.Services
-    .AddExceptionHandler<GlobalExceptionHandler>()
-    .AddExceptionHandler<BadRequestExceptionHandler>();
+    .AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddAuthentication(x =>

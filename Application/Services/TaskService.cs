@@ -2,7 +2,8 @@
 using SGT.Application.Interfaces;
 using SGT.Domain.Entities;
 using SGT.Domain.Repositories;
-
+using SGT.Core.Exceptions;
+using System.Threading.Tasks;
 
 namespace SGT.Application.Services
 {
@@ -19,12 +20,12 @@ namespace SGT.Application.Services
         {
             if(taskRequestDTO == null)
             {
-                throw new ArgumentNullException("Task não pode ser nula.");
+                throw new BadRequestException("Task não pode ser nula.");
             }
 
             if (taskRequestDTO.EndDate <= taskRequestDTO.StartDate)
             {
-                throw new ApplicationException("A data de término deve ser posterior à data de início.");
+                throw new BadRequestException("A data de término deve ser posterior à data de início.");
             }
 
             TaskEntity task = new TaskEntity(taskRequestDTO.Title,
@@ -46,9 +47,9 @@ namespace SGT.Application.Services
         {
             IEnumerable<TaskEntity> tasks = await _taskRepository.GetAll();
 
-            if (tasks == null)
+            if (!tasks.Any())
             {
-                throw new ApplicationException("Nenhuma tarefa encontrada.");
+                throw new NotFoundException("Nenhuma tarefa encontrada.");
             }
 
             var tasksConverted = tasks.Select(task => new TaskResponseDTO
@@ -71,7 +72,7 @@ namespace SGT.Application.Services
 
             if (task == null)
             {
-                throw new ApplicationException($"Nenhuma tarefa encontrada com o id {id}");
+                throw new NotFoundException($"Nenhuma tarefa encontrada com o id {id}");
             }
 
             TaskResponseDTO taskConverted = new TaskResponseDTO(task);
@@ -83,6 +84,10 @@ namespace SGT.Application.Services
         {
             IEnumerable<TaskEntity> tasks = await _taskRepository.GetTasksByUserId(id);
 
+            if (!tasks.Any())
+            {
+                throw new NotFoundException($"Nenhuma tarefa atrelada a esse usuário. {id}");
+            }
 
             var tasksConverted = tasks.Select(task => new TaskResponseDTO
             {
@@ -104,7 +109,7 @@ namespace SGT.Application.Services
 
             if (existingTask == null)
             {
-                throw new ApplicationException("Task não encontrado.");
+                throw new NotFoundException("Task não encontrado.");
             }
 
             // busca todas as propriedades das classes e armazena em um array
@@ -139,7 +144,7 @@ namespace SGT.Application.Services
 
         public async Task<bool> DeleteTaskAsync(int id)
         {
-            return (id <= 0) ? throw new ApplicationException("Id inexistente.") : await _taskRepository.Delete(id);
+            return (id <= 0) ? throw new NotFoundException("Tarefa não encontrada.") : await _taskRepository.Delete(id);
         }
     }
 }
