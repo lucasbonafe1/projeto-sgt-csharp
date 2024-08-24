@@ -28,12 +28,7 @@ namespace SGT.API.Controllers
         { 
             var taskCreated = await _taskService.AddTaskAsync(task);
 
-            if (taskCreated == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Erro na criação de tarefa.");
-            }
-
-            _taskProducer.SendTaskMessage(taskCreated);
+            //_taskProducer.SendTaskMessage(taskCreated);
             
             return Ok(taskCreated);
         }
@@ -44,11 +39,6 @@ namespace SGT.API.Controllers
         {
             IEnumerable<TaskResponseDTO> tasks = await _taskService.GetAllTasksAsync();
 
-            if (tasks == null || !tasks.Any())
-            {
-                return NotFound("Nenhuma tarefa encontrada.");
-            }
-
             return Ok(tasks);
         }
 
@@ -57,11 +47,6 @@ namespace SGT.API.Controllers
         public async Task<IActionResult> FindById(int id)
         {
             TaskResponseDTO task = await _taskService.GetTaskByIdAsync(id);
-
-            if (task == null)
-            {
-                return NotFound($"Nenhuma tarefa encontrada com id {id}");
-            }
 
             return Ok(task);
         }
@@ -72,11 +57,6 @@ namespace SGT.API.Controllers
         {
             IEnumerable<TaskResponseDTO> tasks = await _taskService.GetTasksByUserIdAsync(id);
 
-            if (tasks == null || !tasks.Any())
-            {
-                return NotFound("Você ainda não possui nenhuma tarefa.");
-            }
-
             return Ok(tasks);
         }
 
@@ -86,7 +66,7 @@ namespace SGT.API.Controllers
         { 
             await _taskService.UpdateTaskAsync(taskUpdateDTO, id);
 
-            _taskProducer.UpdatedTaskMessage(taskUpdateDTO);
+            //_taskProducer.UpdatedTaskMessage(taskUpdateDTO);
 
             return NoContent();
 

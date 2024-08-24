@@ -1,5 +1,7 @@
-﻿using SGT.Application.DTOs.Users;
+﻿
+using SGT.Application.DTOs.Users;
 using SGT.Application.Interfaces;
+using SGT.Core.Exceptions;
 using SGT.Domain.Entities;
 using SGT.Domain.Repositories;
 
@@ -18,7 +20,7 @@ namespace SGT.Application.Services
         {
             if(userDTO == null)
             { 
-                throw new ArgumentNullException("User não pode ser nulo.");
+                throw new BadRequestException("User não pode ser nulo.");
             }
 
             // criptografa a senha para ser armazenada no bd
@@ -44,7 +46,7 @@ namespace SGT.Application.Services
 
             if (users == null)
             {
-                throw new ApplicationException("Nenhum user encontrado.");
+                throw new NotFoundException("Nenhum user encontrado.");
             }
 
             var usersConverted = users.Select(user => new UserGetAllDTO
@@ -65,7 +67,7 @@ namespace SGT.Application.Services
 
             if (user == null)
             {
-                throw new ApplicationException($"Nenhum user encontrado com o id {id}");
+                throw new NotFoundException("Nenhum user encontrado.");
             }
 
             UserResponseDTO userConverted = new UserResponseDTO(user);
@@ -79,7 +81,7 @@ namespace SGT.Application.Services
 
             if (existingUser == null)
             {
-                throw new ApplicationException("User não encontrado.");
+                throw new NotFoundException("User não encontrado.");
             }
 
             var taskProperties = typeof(UserEntity).GetProperties();
@@ -105,7 +107,7 @@ namespace SGT.Application.Services
 
         public async Task<bool> DeleteUserAsync(int id)
         {
-            return (id <= 0) ? throw new ApplicationException("Id inexistente.") : await _userRepository.Delete(id);
+            return (id <= 0) ? throw new NotFoundException("Id inexistente.") : await _userRepository.Delete(id);
         }
     }
 }

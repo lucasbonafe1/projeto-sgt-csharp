@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGT.API", "SGT.API\SGT.API.csproj", "{2193B9A9-B75C-478A-BA98-39660A808F8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SGT.API", "SGT.API\SGT.API.csproj", "{2193B9A9-B75C-478A-BA98-39660A808F8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGT.Domain", "Domain\SGT.Domain.csproj", "{6796CD64-BC01-4191-99E9-06D66FD63E18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SGT.Domain", "Domain\SGT.Domain.csproj", "{6796CD64-BC01-4191-99E9-06D66FD63E18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGT.Infrastructure", "Infrastructure\SGT.Infrastructure.csproj", "{19F7E141-801A-45A2-96B2-D5ACAA5D5FE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SGT.Infrastructure", "Infrastructure\SGT.Infrastructure.csproj", "{19F7E141-801A-45A2-96B2-D5ACAA5D5FE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGT.Application", "Application\SGT.Application.csproj", "{F1B6336C-E394-4D98-AE5E-90B2A08C1708}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SGT.Application", "Application\SGT.Application.csproj", "{F1B6336C-E394-4D98-AE5E-90B2A08C1708}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGT.Tests", "SGT.Tests\SGT.Tests.csproj", "{44233EE5-8556-470C-8C50-769DE15D2EB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SGT.Tests", "SGT.Tests\SGT.Tests.csproj", "{44233EE5-8556-470C-8C50-769DE15D2EB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGT.Core", "SGT.Core\SGT.Core.csproj", "{4A3C94F1-CB00-4112-A14E-131943F677ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{44233EE5-8556-470C-8C50-769DE15D2EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44233EE5-8556-470C-8C50-769DE15D2EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44233EE5-8556-470C-8C50-769DE15D2EB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3C94F1-CB00-4112-A14E-131943F677ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3C94F1-CB00-4112-A14E-131943F677ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3C94F1-CB00-4112-A14E-131943F677ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3C94F1-CB00-4112-A14E-131943F677ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

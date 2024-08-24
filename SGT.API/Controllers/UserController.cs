@@ -25,13 +25,7 @@ namespace SGT.API.Controllers
         public async Task<IActionResult> Post([FromBody] UserRequestDTO user)
         {
             var userCreated = await _userService.AddUserAsync(user);
-
-            if (user == null)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Erro na criação de conta.");
-            }
-
-            _userProducer.CreateAccountMessage(userCreated);
+            //_userProducer.CreateAccountMessage(userCreated);
 
             return Ok(userCreated);
         }
@@ -57,11 +51,6 @@ namespace SGT.API.Controllers
         public async Task<IActionResult> FindById(int id)
         {
             UserResponseDTO user = await _userService.GetUserByIdAsync(id);
-
-            if (user == null)
-            {
-                return NotFound($"Nenhum usuário encontrado com o id {id}");
-            }
 
             _userProducer.GetTimeTask(user);
 
